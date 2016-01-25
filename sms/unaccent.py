@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     """
 
-    print text.translate(unaccented_map())
+    print(text.translate(unaccented_map()))
 
     # note that non-letters are passed through as is; you can use
     # encode("ascii", "ignore") to get rid of them.  alternatively,
@@ -82,5 +82,5 @@ if __name__ == "__main__":
 
     map = unaccented_map()
 
-    print repr(u"12\xbd inch".translate(map))
-    print repr(u"12\xbd inch".translate(map).encode("ascii", "ignore"))
+    print(repr(u"12\xbd inch".translate(map)))
+    print(repr(u"12\xbd inch".translate(map).encode("ascii", "ignore")))

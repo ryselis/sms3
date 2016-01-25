@@ -3,7 +3,6 @@ import logging
 import re
 import serial
 
-
 pat = re.compile(r'\+CMGL: (?P<index>\d+),'
                  '"(?P<status>.+?)",'
                  '"(?P<number>.+?)",'
@@ -12,6 +11,7 @@ pat = re.compile(r'\+CMGL: (?P<index>\d+),'
                  )
 
 logger = logging.getLogger('sms.modem')
+
 
 class ModemError(RuntimeError):
     pass
@@ -40,13 +40,13 @@ class Message(object):
             if 'OK' in line:
                 ok = True
         if not ok:
-            raise ModemError('Delete of message %d seemed to fail' 
+            raise ModemError('Delete of message %d seemed to fail'
                              % self.index)
 
 
 class Modem(object):
     """Provides access to a gsm modem"""
-    
+
     def __init__(self, dev_id):
         self.conn = serial.Serial(dev_id, 9600, timeout=1, rtscts=1)
         # make sure modem is OK
@@ -85,7 +85,7 @@ class Modem(object):
         if text is not None:
             msgs.append(Message(index, self, number, date, text))
         return msgs
-    
+
     def wait(self, timeout=None):
         """Blocking wait until a message is received or timeout (in secs)"""
         old_timeout = self.conn.timeout
@@ -95,20 +95,23 @@ class Modem(object):
         self.conn.timeout = old_timeout
         results = self.conn.readlines()
         logger.debug('after wait read "%s"' % results)
-        
+
     def _command(self, at_command, flush=True):
+        if isinstance(at_command, str):
+            at_command = at_command.encode()
         logger.debug('sending "%s"' % at_command)
         self.conn.write(at_command)
         if flush:
-            self.conn.write('\r\n')
-            #logger.debug('sending crnl')
-        results = self.conn.readlines()
+            self.conn.write(b'\r\n')
+            # logger.debug('sending crnl')
+        # convert from bytes to strings
+        results = [res.decode() for res in self.conn.readlines()]
         logger.debug('received "%s"' % results)
         for line in results:
             if 'ERROR' in line:
                 raise ModemError(results)
         return results
-    
+
     def __del__(self):
         try:
             self.conn.close()

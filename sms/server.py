@@ -51,8 +51,8 @@ def incoming_server(device, incoming_directory, log_file):
             pass
     logger.debug('starting with message number %d' % n)
 
-    print "waiting for incoming sms messages."
-    print "will write messages to %s" % incoming_directory
+    print("waiting for incoming sms messages.")
+    print("will write messages to %s" % incoming_directory)
 
     while True:
         logger.debug('began waiting')
@@ -71,7 +71,7 @@ def incoming_server(device, incoming_directory, log_file):
             n += 1
             logger.info('wrote incoming message: %s "%s"' % 
                         (filename, message))
-            print "received a message. wrote it to %s" % filename
+            print("received a message. wrote it to %s" % filename)
             message.delete()
 
 
@@ -106,8 +106,8 @@ def subprocess_server(device, args, log_file, ascii=True):
     # create modem
     m = sms.Modem(device)
 
-    print "waiting for incoming sms messages."
-    print "will pass messages to %s" % args
+    print("waiting for incoming sms messages.")
+    print("will pass messages to %s" % args)
 
     while True:
         logger.debug('began waiting')
@@ -146,12 +146,12 @@ def subprocess_server(device, args, log_file, ascii=True):
                     number, msg = response.split('\n', 1)
                 except ValueError:
                     logger.error('malformed response: %s', response)
-                    print "processed message, bad response"
+                    print("processed message, bad response")
                     continue
                 m.send(number, msg)
                 logger.info('sent response message %s %s', number, msg)
-                print "processed message, sent response"
+                print("processed message, sent response")
             else:
                 logger.info('no response from subprocess')
-                print "processed message, no response"
+                print("processed message, no response")
 

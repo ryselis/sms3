@@ -1,13 +1,14 @@
 from doctest import DocFileSuite, ELLIPSIS
 
+
 class DummyConnection(object):
     def __init__(self):
         self.w = ''
         self.response = []
         self.timeout = .5
-        
+
     # serial.Serial methods
-        
+
     def write(self, text):
         self.w += text
 
@@ -15,9 +16,9 @@ class DummyConnection(object):
         timeout = self.timeout
         if timeout is None:
             timeout = 'no'
-        print 'reading with %s timeout' % timeout
+        print('reading with %s timeout' % timeout)
         return ''
-        
+
     def readlines(self):
         return self.response
 
@@ -25,7 +26,7 @@ class DummyConnection(object):
         pass
 
     # test methods
-    
+
     def sent(self):
         v = self.w
         self.w = ''
@@ -33,8 +34,9 @@ class DummyConnection(object):
 
     def reset(self):
         self.w = ''
-        
+
+
 def test_suite():
     return DocFileSuite('README.txt',
-                        globs={'DummyConnection':DummyConnection}, 
-                        optionflags = ELLIPSIS)
+                        globs={'DummyConnection': DummyConnection},
+                        optionflags=ELLIPSIS)
